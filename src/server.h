@@ -17,6 +17,6 @@
 void handle_client_request(int client_fd);
 void print_server_info(int port);
 int create_server_socket(int port);
-void run_server(int port);
+void run_server(int port, char *file_server);
 
 #endif // SERVER_H

@@ -1,4 +1,5 @@
 #include "server.h"
+#include "endpoints.h"
 
 #define BUFFER_SIZE 4096
 
@@ -21,14 +22,12 @@ void print_server_info(int port) {
     printf("HTTP Server running on port %d\n", port);
     printf("Available endpoints:\n");
     printf("  GET /files  		- File listing with chunked transfer encoding\n");
-    printf("  GET /user-agent   - Returns User-Agent\n");
     printf("  GET /echo 		- Echo echo...\n");
+	printf("  GET /*      		- 200 OK\n");
     printf("  GET /*      		- 404 page\n\n");
     printf("Test with:\n");
-    printf("  curl http://localhost:%d/files/foo\n", port);
-    printf("  curl -v http://localhost:%d/files  # See chunked headers\n", port);
-    printf("  curl http://localhost:%d/user-agent\n", port);
-    printf("  curl http://localhost:%d/echo/hello\n\n", port);
+    printf("  curl http://localhost:%d/echo/hello\n", port);
+    printf("  curl http://localhost:%d/files/foo\n\n", port);
 }
 
 int create_server_socket(int port) {
@@ -59,9 +58,11 @@ int create_server_socket(int port) {
 	return server_fd;
 }
 
-void run_server(int port) {
+void run_server(int port, char *file_server) {
 	setbuf(stdout, NULL);
  	setbuf(stderr, NULL);
+
+	set_file_server_directory(file_server);
 
 	struct sockaddr_in client_addr;
 	socklen_t client_addr_len;

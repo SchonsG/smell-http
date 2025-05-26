@@ -6,16 +6,21 @@
 
 int main(int argc, char *argv[]) {
     int port = PORT;
-    
-    if (argc > 1) {
-        int port = atoi(argv[1]);
+    char *file_server = "";
 
-        if (port <= 0 || port > 65535) {
-            fprintf(stderr, "PORT out of valid range: %d\n", port);
-            exit(EXIT_FAILURE);
+    for (int i = 1; i < argc; i ++) {
+        if (strcmp(argv[i], "--file-directory") == 0) {
+            i++;
+            file_server = argv[i];
+        } else {
+            int port = atoi(argv[i]);
+            if (port <= 0 || port > 65535) {
+                fprintf(stderr, "PORT out of valid range: %d\n", port);
+                exit(EXIT_FAILURE);
+            }
         }
     }
 
-    printf("Starting HTTP Server with Chunked Transfer Encoding...\n");
-    run_server(port);
+    printf("Starting HTTP Server with Chunked Transfer Encoding...\n\n");
+    run_server(port, file_server);
 }
