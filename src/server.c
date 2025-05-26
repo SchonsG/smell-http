@@ -4,13 +4,9 @@
 #define BUFFER_SIZE 4096
 
 void handle_client_request(int client_fd) {
-	char buffer[BUFFER_SIZE] = { 0 };
+	char buffer[BUFFER_SIZE];
     ssize_t bytes_received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
-
-	if (bytes_received <= 0) {
-		close(client_fd);
-		return;
-	}
+	if (bytes_received <= 0) close(client_fd);
 
 	http_request_t *request = parse_http_request(buffer);
 	route_http(request, client_fd);

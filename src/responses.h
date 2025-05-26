@@ -15,4 +15,8 @@ typedef struct {
 
 void send_response(int client_fd, http_response_t *response);
 
+void send_start_file(int client_fd);
+void send_file(int client_fd, char buffer_header[], char buffer[], size_t bytes_read);
+void send_end_file(int client_fd);
+
 #endif
