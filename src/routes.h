@@ -5,6 +5,6 @@
 #include "responses.h"
 #include "requests.h"
 
-void *route_http(http_request_t *request, int client_id);
+void route_http(http_request_t *request, int client_id);
 
 #endif

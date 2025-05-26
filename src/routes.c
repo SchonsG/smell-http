@@ -1,14 +1,15 @@
 #include "routes.h"
 
-void *route_http(http_request_t *request, int client_id) {
-    if (strncmp(request->path, "/", 1) == 0) {
-        http_response_t *response = handle_index();
-        send_response(client_id, response);
-    };
+void route_http(http_request_t *request, int client_id) {
+    http_response_t *response = not_found();
 
-    if (strncmp(request->path, "/echo", 5) == 0) {
-        http_response_t *response = handle_echo();
-    }
+    if (strcmp(request->path, "/") == 0)
+        response = handle_index();
 
-    // if (strncmp(request->path, "/files", 6) == 0) return handle_files();
+    if (strncmp(request->path, "/echo", 5) == 0)
+        response = handle_echo(request);
+
+    // if (strncmp(request->path, "/files", 6) == 0) handle_files();
+    
+    send_response(client_id, response);
 }
