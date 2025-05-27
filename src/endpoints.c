@@ -34,20 +34,6 @@ http_response_t *handle_index(void) {
     return response;
 }
 
-char *get_value_from_path(char *path, int start) {
-    path += start;
-    char *end = strchr(path, '/');
-    int len = end ? (end - path) : strlen(path);
-
-    char *result = malloc(len+1);
-    if (!result) return NULL;
-
-    strncpy(result, path, len);
-    result[len] = '\0';
-
-    return result;
-}
-
 http_response_t *handle_echo(http_request_t *request) {
     http_response_t *response = malloc(sizeof(http_response_t));
     if (!response) return NULL;
@@ -57,14 +43,14 @@ http_response_t *handle_echo(http_request_t *request) {
     response->status_code = 200;
     response->status_text = "OK";
     response->content_type = "application/json";
-    response->content_body = get_value_from_path(request->path, 6); // skip `/echo/`
+    response->content_body = extract_path_segment(request->path); // skip `/echo/`
 
     return response;
 }
 
 int handle_files(http_request_t *request, int client_id) {
     char *file_path = malloc(1024);
-    char *file_name = get_value_from_path(request->path, 7); // skip `/files/`
+    char *file_name = extract_path_segment(request->path); // skip `/files/`
     sprintf(file_path, "%s/%s", g_file_server_dir, file_name);
 
     int success = stream_file_content(file_path, client_id);
