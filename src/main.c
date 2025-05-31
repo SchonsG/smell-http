@@ -8,7 +8,7 @@
 
 int main(int argc, char *argv[]) {
     int port = PORT;
-    char *file_server = "";
+    char *file_server = "/Users/gschons/Workspace/gschons/smell-http/files";
 
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--file-directory") == 0) {
@@ -34,10 +34,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
     printf("Starting HTTP Server on port %d...\n", port);
     printf("Serving files from directory: %s\n", file_server);
-
     printf("Starting HTTP Server with Chunked Transfer Encoding...\n\n");
+
     run_server(port, file_server);
 }

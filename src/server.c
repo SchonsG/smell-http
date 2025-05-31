@@ -1,19 +1,29 @@
 #include "server.h"
-#include "endpoints.h"
 
 #define BUFFER_SIZE 4096
+#define CONNECTION_BACKLOG 5
 
-void handle_client_request(int client_fd) {
+void handle_client_request(int client_fd, CacheManager* cache) {
 	char buffer[BUFFER_SIZE];
     ssize_t bytes_received = recv(client_fd, buffer, sizeof(buffer) - 1, 0);
-	if (bytes_received <= 0) close(client_fd);
+	if (bytes_received <= 0) {
+		close(client_fd);
+		return;
+	}
 
 	http_request_t *request = parse_http_request(buffer);
-	route_http(request, client_fd);
+	if (!request) {
+        fprintf(stderr, "Error: Invalid request\n");
+        close(client_fd);
+        return;
+    }
+
+	route_http(request, client_fd, cache);
+
 	free(request);
+	close(client_fd);
 }
 
-// Print server startup information
 void print_server_info(int port) {
     printf("HTTP Server running on port %d\n", port);
     printf("Available endpoints:\n");
@@ -34,19 +44,19 @@ int create_server_socket(int port) {
 		printf("Socket creation failed: %s...\n", strerror(errno));
 		return 1;
 	}
-	
-	struct sockaddr_in serv_addr = { .sin_family = AF_INET ,
-									 .sin_port = htons(port),
-									 .sin_addr = { htonl(INADDR_ANY) },
-									};
-	
+
+	struct sockaddr_in serv_addr = {
+		.sin_family = AF_INET ,
+		.sin_port = htons(port),
+		.sin_addr = { htonl(INADDR_ANY) },
+	};
+
 	if (bind(server_fd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) != 0) {
 		printf("Bind failed: %s \n", strerror(errno));
 		return 1;
 	}
-	
-	int connection_backlog = 5;
-	if (listen(server_fd, connection_backlog) != 0) {
+
+	if (listen(server_fd, CONNECTION_BACKLOG) != 0) {
 		printf("Listen failed: %s \n", strerror(errno));
 		return 1;
 	}
@@ -58,16 +68,17 @@ void run_server(int port, char *file_server) {
 	setbuf(stdout, NULL);
  	setbuf(stderr, NULL);
 
-	set_file_server_directory(file_server);
-
 	struct sockaddr_in client_addr;
 	socklen_t client_addr_len;
-	
+
 	int server_fd = create_server_socket(port);
 	print_server_info(port);
 
 	printf("Waiting for a client to connect...\n");
 	client_addr_len = sizeof(client_addr);
+
+	set_file_server_directory(file_server);
+	CacheManager *cache = create_manager_cache(5);
 
 	while (1) {
 		int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_addr_len);
@@ -76,8 +87,9 @@ void run_server(int port, char *file_server) {
 			continue;	
 		}
 
-		handle_client_request(client_fd);
+		handle_client_request(client_fd, cache);
 	}
 
 	close(server_fd);
+	// TODO: destroy cache
 }

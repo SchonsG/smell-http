@@ -48,13 +48,20 @@ http_response_t *handle_echo(http_request_t *request) {
     return response;
 }
 
-int handle_files(http_request_t *request, int client_id) {
+int handle_files(http_request_t *request, int client_id, CacheManager* cache) {
     char *file_path = malloc(1024);
     char *file_name = extract_path_segment(request->path); // skip `/files/`
     sprintf(file_path, "%s/%s", g_file_server_dir, file_name);
 
-    int success = stream_file_content(file_path, client_id);
-    if (!success) return -1;
+    size_t f_length = get_file_length(file_path);
+
+    if (f_length > 1024 * 1024 * 10) { // Limit to 10MB
+        int success = stream_file_content(file_path, client_id);
+        if (!success) return -1;
+    } else {
+        int success = send_file_content(file_path, client_id, cache);
+        if (!success) return -1;
+    }
 
     return 0;
 }

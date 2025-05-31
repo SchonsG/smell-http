@@ -13,7 +13,7 @@ void send_response(int client_fd, http_response_t *response) {
     send(client_fd, response_txt, strlen(response_txt), 0);
 }
 
-void send_start_file(int client_fd) {
+void send_start_file_stream(int client_fd) {
     const char *hdr =
         "HTTP/1.1 200 OK\r\n"
         "Content-Type: application/octet-stream\r\n"
@@ -23,12 +23,25 @@ void send_start_file(int client_fd) {
     send(client_fd, hdr, strlen(hdr), 0);
 }
 
-void send_file(int client_fd, char buffer_header[], char buffer[], size_t bytes_read) {
+void send_chunk(int client_fd, char buffer_header[], char buffer[], size_t bytes) {
     send(client_fd, buffer_header, strlen(buffer_header), 0);
-    send(client_fd, buffer, bytes_read, 0);
+    send(client_fd, buffer, bytes, 0);
     send(client_fd, "\r\n", 2, 0);
 }
 
-void send_end_file(int client_fd) {
+void send_end_file_stream(int client_fd) {
     send(client_fd, "0\r\n\r\n", 5, 0);
+}
+
+void send_file(int client_fd, char* buffer, size_t bytes) {
+    char response_header[512];
+    snprintf(response_header, sizeof(response_header),
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: application/octet-stream\r\n"
+        "Content-Length: %zu\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n", bytes);
+    
+    send(client_fd, response_header, strlen(response_header), 0);
+    send(client_fd, buffer, bytes, 0);
 }

@@ -10,11 +10,13 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 
-#include "requests.h"
+#include "endpoints.h"
 #include "responses.h"
+#include "requests.h"
 #include "routes.h"
+#include "cache.h"
 
-void handle_client_request(int client_fd);
+void handle_client_request(int client_fd, CacheManager* cache);
 void print_server_info(int port);
 int create_server_socket(int port);
 void run_server(int port, char *file_server);

@@ -1,6 +1,6 @@
 #include "routes.h"
 
-void route_http(http_request_t *request, int client_id) {
+void route_http(http_request_t *request, int client_id, CacheManager* cache) {
     http_response_t *response = not_found();
 
     if (strcmp(request->path, "/") == 0)
@@ -10,7 +10,7 @@ void route_http(http_request_t *request, int client_id) {
         response = handle_echo(request);
 
     if (strncmp(request->path, "/files", 6) == 0)
-        if (handle_files(request, client_id)) {
+        if (handle_files(request, client_id, cache)) {
             // the response is handled by the files
             return;
         }

@@ -4,7 +4,8 @@
 #include "endpoints.h"
 #include "responses.h"
 #include "requests.h"
+#include "cache.h"
 
-void route_http(http_request_t *request, int client_id);
+void route_http(http_request_t *request, int client_id, CacheManager* cache);
 
 #endif

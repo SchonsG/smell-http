@@ -16,7 +16,7 @@ http_request_t *parse_http_request(char *request_data) {
     if (method) request->method = strdup(method);
     if (path) request->path = strdup(path);
     if (version) request->version = strdup(version);
-    
+
     free(line);
     return request;
 }
