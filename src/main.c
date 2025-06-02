@@ -1,36 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <getopt.h>
 
 #include "server.h"
 
 #define PORT 4221
+#define SERVER "/Users/gschons/Workspace/gschons/smell-http/files"
 
 int main(int argc, char *argv[]) {
-    int port = PORT;
-    char *file_server = "/Users/gschons/Workspace/gschons/smell-http/files";
+    int opt;
+    int option_index = 0;
 
-    for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--file-directory") == 0) {
-            if (i + 1 >= argc) {
-                fprintf(stderr, "Error: --file-directory requires a directory path\n");
-                exit(EXIT_FAILURE);
-            }
-            i++;
-            file_server = argv[i];
-        }
-        else if (strcmp(argv[i], "--port") == 0) {
-            if (i + 1 >= argc) {
-                fprintf(stderr, "Error: --port requires a port number\n");
-                exit(EXIT_FAILURE);
-            }
-            i++;
-            int parsed_port = atoi(argv[i]);
-            if (parsed_port <= 0 || parsed_port > 65535) {
-                fprintf(stderr, "PORT out of valid range: %d\n", parsed_port);
-                exit(EXIT_FAILURE);
-            }
-            port = parsed_port;
+    int port = PORT;
+    char *file_server = SERVER;
+
+    struct option long_options[] = {
+        {"directory", optional_argument, 0, 'd'},
+        {"port", optional_argument, 0, 'p'},
+        {0, 0, 0, 0}
+    };
+
+    while ((opt = getopt_long(argc, argv, "d:p:", long_options, &option_index)) != -1) {
+        switch (opt) {
+            case 'd':
+                file_server = optarg;
+                break;
+            case 'p':
+                port = atoi(optarg);
+                break;
         }
     }
 
