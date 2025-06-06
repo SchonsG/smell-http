@@ -3,7 +3,7 @@
 #include <string.h>
 #include <getopt.h>
 
-#include "server.h"
+#include "../include/network/server.h"
 
 #define PORT 4221
 #define SERVER "/Users/gschons/Workspace/gschons/smell-http/files"

@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "utils/utils.h"
 #include "responses.h"
 #include "requests.h"
 #include "files.h"
-#include "utils.h"
 #include "cache.h"
 
 void set_file_server_directory(const char *dir);

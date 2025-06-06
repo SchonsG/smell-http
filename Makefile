@@ -2,10 +2,10 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Wextra -O2 -Iinclude
 
 # List of source files
-SRC = $(wildcard src/*.c)
+SRC = $(wildcard src/*.c src/handlers/*.c src/utils/*.c src/cache/*.c src/network/*.c)
 
 # Object files
 OBJ = $(SRC:.c=.o)

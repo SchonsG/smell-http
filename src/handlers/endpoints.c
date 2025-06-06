@@ -1,4 +1,4 @@
-#include "endpoints.h"
+#include "handlers/endpoints.h"
 
 // Add a global variable for the file server directory
 static char *g_file_server_dir = NULL;

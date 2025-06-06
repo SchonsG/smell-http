@@ -10,7 +10,7 @@
 #include <netinet/in.h>
 #include <netinet/ip.h>
 
-#include "endpoints.h"
+#include "../handlers/endpoints.h"
 #include "responses.h"
 #include "requests.h"
 #include "routes.h"

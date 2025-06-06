@@ -1,4 +1,4 @@
-#include "server.h"
+#include "network/server.h"
 
 #define BUFFER_SIZE 4096
 #define CONNECTION_BACKLOG 5

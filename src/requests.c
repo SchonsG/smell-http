@@ -1,5 +1,5 @@
 #include "requests.h"
-#include "endpoints.h"
+#include "handlers/endpoints.h"
 
 // Parse basic HTTP request
 http_request_t *parse_http_request(char *request_data) {

@@ -6,7 +6,7 @@
 #include <string.h>
 
 #include "responses.h"
-#include "cache.h"
+#include "cache/cache.h"
 
 int stream_file_content(const char* file_name, int client_socket);
 int send_file_content(const char* file_name, int client_fd, CacheManager* cache);

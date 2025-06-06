@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "utils/utils.h"
 
 char *extract_path_segment(char *path) {
     char *end = strrchr(path, '/') + 1;
