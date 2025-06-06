@@ -20,7 +20,7 @@ http_response_t *not_found(void) {
     return response;
 }
 
-http_response_t *handle_index(void) {
+http_response_t *handle_index(http_request_t *request) {
     http_response_t *response = malloc(sizeof(http_response_t));
     if (!response) return NULL;
 
